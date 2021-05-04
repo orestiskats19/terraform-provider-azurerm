@@ -118,30 +118,19 @@ func resourceDataFactoryDatasetSnowflake() *schema.Resource {
 							ValidateFunc: validation.StringIsNotEmpty,
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Optional: true,
-							ValidateFunc: validation.StringInSlice([]string{
-								"Byte",
-								"Byte[]",
-								"Boolean",
-								"Date",
-								"DateTime",
-								"DateTimeOffset",
-								"Decimal",
-								"Double",
-								"Guid",
-								"Int16",
-								"Int32",
-								"Int64",
-								"Single",
-								"String",
-								"TimeSpan",
-							}, false),
-						},
-						"description": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: validation.StringIsNotEmpty,
+						},
+						"precision": {
+							Type:         schema.TypeInt,
+							Optional:     true,
+							ValidateFunc: validation.IntAtLeast(0),
+						},
+						"scale": {
+							Type:         schema.TypeInt,
+							Optional:     true,
+							ValidateFunc: validation.IntAtLeast(0),
 						},
 					},
 				},
@@ -212,7 +201,7 @@ func resourceDataFactoryDatasetSnowflakeCreateUpdate(d *schema.ResourceData, met
 	}
 
 	if v, ok := d.GetOk("schema_column"); ok {
-		snowflakeTableset.Structure = expandDataFactoryDatasetStructure(v.([]interface{}))
+		snowflakeTableset.Schema = expandDataFactoryDatasetSnowflakeSchema(v.([]interface{}))
 	}
 
 	datasetType := string(datafactory.TypeRelationalTable)
@@ -314,8 +303,8 @@ func resourceDataFactoryDatasetSnowflakeRead(d *schema.ResourceData, meta interf
 		}
 	}
 
-	structureColumns := flattenDataFactoryStructureColumns(snowflakeTable.Structure)
-	if err := d.Set("schema_column", structureColumns); err != nil {
+	schemaColumns := flattenDataFactorySnowflakeSchemaColumns(snowflakeTable.Schema)
+	if err := d.Set("schema_column", schemaColumns); err != nil {
 		return fmt.Errorf("Error setting `schema_column`: %+v", err)
 	}
 
