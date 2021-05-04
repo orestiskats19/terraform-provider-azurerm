@@ -202,8 +202,6 @@ func resourceDataFactoryDatasetSnowflakeCreateUpdate(d *schema.ResourceData, met
 
 	if v, ok := d.GetOk("schema_column"); ok {
 		snowflakeTableset.Schema = expandDataFactoryDatasetSnowflakeSchema(v.([]interface{}))
-	} else {
-		snowflakeTableset.Schema = make([]interface{}, 0)
 	}
 
 	datasetType := string(datafactory.TypeRelationalTable)
