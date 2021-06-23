@@ -11,6 +11,7 @@ import (
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/helpers/tf"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/clients"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/datafactory/validate"
+	keyVaultParse "github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/services/keyvault/parse"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/tf/pluginsdk"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/internal/timeouts"
 	"github.com/terraform-providers/terraform-provider-azurerm/azurerm/utils"
@@ -66,6 +67,27 @@ func resourceDataFactoryLinkedServiceAzureBlobStorage() *schema.Resource {
 				Sensitive:    true,
 				ValidateFunc: validation.StringIsNotEmpty,
 				ExactlyOneOf: []string{"connection_string", "sas_uri", "service_endpoint"},
+			},
+
+			"sas_token": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"linked_service_name": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validation.StringIsNotEmpty,
+						},
+
+						"secret_name": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validation.StringIsNotEmpty,
+						},
+					},
+				},
 			},
 
 			"description": {
@@ -184,6 +206,8 @@ func resourceDataFactoryLinkedServiceBlobStorageCreateUpdate(d *schema.ResourceD
 			Value: utils.String(v.(string)),
 			Type:  datafactory.TypeSecureString,
 		}
+		v, ok  := d.GetOk("sas_token").([]interface{}); ok {
+			blobStorageProperties.SasToken = expandAzureKeyVaultPassword(v),
 	}
 
 	if d.Get("use_managed_identity").(bool) {
