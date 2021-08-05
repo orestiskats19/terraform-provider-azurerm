@@ -61,6 +61,23 @@ func TestAccDataFactoryLinkedServiceAzureBlobStorage_sas_uri(t *testing.T) {
 	})
 }
 
+func TestAccDataFactoryLinkedServiceAzureBlobStorage_sas_uri_with_sas_token(t *testing.T) {
+	data := acceptance.BuildTestData(t, "azurerm_data_factory_linked_service_azure_blob_storage", "test")
+	r := LinkedServiceAzureBlobStorageResource{}
+
+	data.ResourceTest(t, r, []acceptance.TestStep{
+		{
+			Config: r.sas_uri(data),
+			Check: acceptance.ComposeTestCheckFunc(
+				check.That(data.ResourceName).ExistsInAzure(r),
+                check.That(data.ResourceName).Key("sas_token.0.linked_service_name").HasValue("linkkv"),
+                check.That(data.ResourceName).Key("sas_token.0.secret_name").HasValue("secret"),
+			),
+		},
+		data.ImportStep("sas_uri"),
+	})
+}
+
 func TestAccDataFactoryLinkedServiceAzureBlobStorage_update(t *testing.T) {
 	data := acceptance.BuildTestData(t, "azurerm_data_factory_linked_service_azure_blob_storage", "test")
 	r := LinkedServiceAzureBlobStorageResource{}
