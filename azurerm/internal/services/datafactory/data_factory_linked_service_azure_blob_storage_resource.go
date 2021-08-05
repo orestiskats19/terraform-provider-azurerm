@@ -184,6 +184,10 @@ func resourceDataFactoryLinkedServiceBlobStorageCreateUpdate(d *pluginsdk.Resour
 			Value: utils.String(v.(string)),
 			Type:  datafactory.TypeSecureString,
 		}
+        sasToken := d.Get("sas_token").([]interface{})
+        if v, ok := d.GetOk("sas_token"); ok {
+            blobStorageProperties.SasToken = expandAzureKeyVaultSecretReference(sasToken)
+        }
 	}
 
 	if d.Get("use_managed_identity").(bool) {
