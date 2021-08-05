@@ -70,8 +70,8 @@ func TestAccDataFactoryLinkedServiceAzureBlobStorage_sas_uri_with_sas_token(t *t
 			Config: r.sas_uri(data),
 			Check: acceptance.ComposeTestCheckFunc(
 				check.That(data.ResourceName).ExistsInAzure(r),
-                check.That(data.ResourceName).Key("sas_token.0.linked_service_name").HasValue("linkkv"),
-                check.That(data.ResourceName).Key("sas_token.0.secret_name").HasValue("secret"),
+				check.That(data.ResourceName).Key("sas_token.0.linked_service_name").HasValue("linkkv"),
+				check.That(data.ResourceName).Key("sas_token.0.secret_name").HasValue("secret"),
 			),
 		},
 		data.ImportStep("sas_uri"),
