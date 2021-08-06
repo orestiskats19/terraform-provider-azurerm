@@ -68,26 +68,26 @@ func resourceDataFactoryLinkedServiceAzureBlobStorage() *pluginsdk.Resource {
 				ExactlyOneOf: []string{"connection_string", "sas_uri", "service_endpoint"},
 			},
 
-            "sas_token": {
-                Type:     schema.TypeList,
-                Optional: true,
-                MaxItems: 1,
-                Elem: &schema.Resource{
-                    Schema: map[string]*schema.Schema{
-                        "linked_service_name": {
-                            Type:         schema.TypeString,
-                            Required:     true,
-                            ValidateFunc: validation.StringIsNotEmpty,
-                        },
+			"sas_token": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"linked_service_name": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validation.StringIsNotEmpty,
+						},
 
-                        "secret_name": {
-                            Type:         schema.TypeString,
-                            Required:     true,
-                            ValidateFunc: validation.StringIsNotEmpty,
-                        },
-                    },
-                },
-            },
+						"secret_name": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validation.StringIsNotEmpty,
+						},
+					},
+				},
+			},
 
 			"description": {
 				Type:         pluginsdk.TypeString,
