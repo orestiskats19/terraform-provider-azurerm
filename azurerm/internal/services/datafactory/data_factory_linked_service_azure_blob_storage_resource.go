@@ -201,12 +201,14 @@ func resourceDataFactoryLinkedServiceBlobStorageCreateUpdate(d *pluginsdk.Resour
 	}
 
 	if v, ok := d.GetOk("sas_uri"); ok {
-		blobStorageProperties.SasURI = &datafactory.SecureString{
-			Value: utils.String(v.(string)),
-			Type:  datafactory.TypeSecureString,
-		}
-		if v, ok := d.GetOk("sas_token"); ok {
-			blobStorageProperties.SasToken = expandAzureKeyVaultSecretReference(v.([]interface{}))
+		if sasToken, ok := d.GetOk("sas_token"); ok {
+		    blobStorageProperties.SasURI = utils.String(v.(string))
+			blobStorageProperties.SasToken = expandAzureKeyVaultSecretReference(sasToken.([]interface{}))
+		} else {
+            blobStorageProperties.SasURI = &datafactory.SecureString{
+                Value: utils.String(v.(string)),
+                Type:  datafactory.TypeSecureString,
+            }
 		}
 	}
 
