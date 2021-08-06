@@ -321,6 +321,9 @@ resource "azurerm_resource_group" "test" {
   location = "%s"
 }
 
+data "azurerm_client_config" "current" {
+}
+
 resource "azurerm_data_factory" "test" {
   name                = "acctestdf%d"
   location            = azurerm_resource_group.test.location
@@ -345,11 +348,8 @@ resource "azurerm_data_factory_linked_service_key_vault" "test" {
   key_vault_id        = azurerm_key_vault.test.id
 }
 
-data "azurerm_client_config" "current" {
-}
-
 resource "azurerm_data_factory_linked_service_azure_blob_storage" "test" {
-  name                = "acctestBlobStorage%d"
+  name                = "acctestBlobStorage"
   resource_group_name = azurerm_resource_group.test.name
   data_factory_name   = azurerm_data_factory.test.name
   sas_uri             = "https://storageaccountname.blob.core.windows.net"
