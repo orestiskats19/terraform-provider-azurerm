@@ -72,7 +72,7 @@ func resourceDataFactoryLinkedServiceAzureBlobStorage() *pluginsdk.Resource {
 				Type:     pluginsdk.TypeList,
 				Optional: true,
 				MaxItems: 1,
-				Elem: &schema.Resource{
+				Elem: &pluginsdk.Resource{
 					Schema: map[string]*pluginsdk.Schema{
 						"linked_service_name": {
 							Type:         pluginsdk.TypeString,
