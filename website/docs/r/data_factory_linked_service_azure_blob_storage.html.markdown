@@ -72,11 +72,11 @@ resource "azurerm_data_factory_linked_service_key_vault" "test" {
 }
 
 resource "azurerm_data_factory_linked_service_azure_blob_storage" "test" {
-  name                = "acctestBlobStorage"
+  name                = "example"
   resource_group_name = azurerm_resource_group.test.name
   data_factory_name   = azurerm_data_factory.test.name
-  
-  sas_uri             = "https://storageaccountname.blob.core.windows.net"
+
+  sas_uri = "https://storageaccountname.blob.core.windows.net"
   sas_token {
     linked_service_name = azurerm_data_factory_linked_service_key_vault.test.name
     secret_name         = "secret"
