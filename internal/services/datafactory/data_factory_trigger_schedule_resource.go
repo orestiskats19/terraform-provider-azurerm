@@ -116,6 +116,16 @@ func resourceDataFactoryTriggerSchedule() *pluginsdk.Resource {
 					ValidateFunc: validation.StringIsNotEmpty,
 				},
 			},
+
+			"runtimeState": {
+			    Type:  pluginsdk.TypeString,
+			    Optional: true,
+                ValidateFunc: validation.StringInSlice([]string{
+                    "Started",
+                    "Stopped",
+                    "Disabled",
+                }, false),
+			}
 		},
 	}
 }
@@ -181,6 +191,10 @@ func resourceDataFactoryTriggerScheduleCreateUpdate(d *pluginsdk.ResourceData, m
 	if v, ok := d.GetOk("annotations"); ok {
 		annotations := v.([]interface{})
 		scheduleProps.Annotations = &annotations
+	}
+
+	if v, ok := d.GetOk("runtimeState"); ok {
+		scheduleProps.RuntimeState = v.(string)
 	}
 
 	trigger := datafactory.TriggerResource{
